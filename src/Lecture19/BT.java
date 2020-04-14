@@ -2,8 +2,6 @@ package Lecture19;
 
 import java.util.Scanner;
 
-import Lecture15.BinaryTree.Node;
-
 public class BT {
 	private class Node {
 		int data;
@@ -242,6 +240,93 @@ public class BT {
 		node.right = this.construct(pre, presi + lsi + 1, preei, in, si + 1, inei);
 
 		return node;
+	}
+
+	public boolean isBst() {
+		return this.isBst(this.root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	private boolean isBst(Node node, int min, int max) {
+		if (node == null) {
+			return true;
+		}
+		if (node.data < min || node.data > max) {
+			return false;
+		} else if (!this.isBst(node.left, min, node.data)) {
+			return false;
+		} else if (!this.isBst(node.right, node.data, max)) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	public LinkedList bstToll() {
+		return this.bstToll(this.root);
+	}
+
+	private LinkedList bstToll(Node node) {
+		LinkedList l = new LinkedList();
+		if (node == null) {
+			l.head = null;
+			l.tail = null;
+			return l;
+		}
+
+		if (node.left == null && node.right == null) {
+			LinkedList.Node n = new LinkedList.Node(node.data, null);
+			l.head = n;
+			l.tail = n;
+		} else if (node.left != null && node.right == null) {
+			LinkedList left = this.bstToll(node.left);
+			LinkedList.Node n = new LinkedList.Node(node.data, null);
+
+			left.tail.next = n;
+			l.head = left.head;
+			l.tail = n;
+		} else if (node.right != null && node.left == null) {
+			LinkedList right = this.bstToll(node.right);
+			LinkedList.Node n = new LinkedList.Node(node.data, null);
+
+			n.next = right.head;
+			l.head = n;
+			l.tail = right.tail;
+		} else {
+
+			LinkedList left = this.bstToll(node.left);
+			LinkedList right = this.bstToll(node.right);
+			LinkedList.Node n = new LinkedList.Node(node.data, null);
+
+			left.tail.next = n;
+			n.next = right.head;
+			l.head = left.head;
+			l.tail = right.tail;
+
+		}
+
+		return l;
+	}
+
+	public static class LinkedList {
+		public static class Node {
+			int data;
+			Node next;
+
+			Node(int data, Node next) {
+				this.data = data;
+				this.next = null;
+			}
+		}
+
+		public Node head;
+		public Node tail;
+		public int size;
+
+		public LinkedList() {
+
+		}
+
 	}
 
 }
